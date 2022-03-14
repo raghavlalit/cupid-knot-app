@@ -17,8 +17,47 @@ class ProfileController extends Controller
     {
         $auth_user_email = Auth::user()->email;
         $auth_user_gender = Auth::user()->gender;
+        $auth_user_income = Auth::user()->income;
+        $auth_user_p_income =explode("-",Auth::user()->p_income) ;
         $users = User::where('email', '!=' ,$auth_user_email)->where('gender', '!=' ,$auth_user_gender)->get();
-        return view('profile.index', compact('users'));
+
+        $matchingArr = [
+            "income"=>"10",
+            "occupation"=>"10",
+            "family_type"=>"10",
+            "manglik"=>"10",
+            "p_income"=>"10",
+            "p_occupation"=>"10",
+            "p_family_type"=>"10",
+            "p_manglik"=>"10",
+        ];
+        $matchArr = [];
+        foreach ($users as $key => $user) {
+            $matchValue = 0;
+            if(in_array($user->occupation, Auth::user()->p_occupation)){
+                $matchValue += 10;
+            }
+            if(($auth_user_p_income[0] <= $user->income) && ($user->income <= $auth_user_p_income[1])){
+                $matchValue += 10;
+            }
+            if(in_array($user->family_type,Auth::user()->p_family_type )){
+                $matchValue += 10;
+            }
+            if($user->manglik==Auth::user()->p_manglik){
+                $matchValue += 10;
+            }
+            if($user->p_manglik==Auth::user()->manglik){
+                $matchValue += 10;
+            }
+            if(in_array(Auth::user()->family_type,$user->p_family_type )){
+                $matchValue += 10;
+            }
+            if(in_array(Auth::user()->occupation, $user->p_occupation)){
+                $matchValue += 10;
+            }
+            $matchArr[$user->id] = $matchValue;
+        }
+        return view('profile.index', compact('users', 'matchArr'));
     }
 
     /**

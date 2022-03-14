@@ -44,6 +44,7 @@
           <div class="card" style="width: 18rem;">
             <img src="http://mor.productions/wp-content/uploads/2015/01/dummy-icon.png" class="card-img-top" alt="">
             <div class="card-body">
+              <h4 class="card-title">Profile Matched:<span class="text-success">{{$matchArr[$user->id]}}%</span></h4>
               <h5 class="card-title">{{$user->first_name}} {{$user->last_name}}</h5>
                 <span class="details" style="margin: bottom 0px; display:block; ">Occupation: {{$user->occupation}}</span>
                 <span class="details" style="margin: bottom 0px; display:block; ">Age: {{$currentYear-$userBirthYear}} Years</span>
