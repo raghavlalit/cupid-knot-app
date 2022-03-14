@@ -20,24 +20,19 @@ class ProfileController extends Controller
         $auth_user_income = Auth::user()->income;
         $auth_user_p_income =explode("-",Auth::user()->p_income) ;
         $users = User::where('email', '!=' ,$auth_user_email)->where('gender', '!=' ,$auth_user_gender)->get();
-
-        $matchingArr = [
-            "income"=>"10",
-            "occupation"=>"10",
-            "family_type"=>"10",
-            "manglik"=>"10",
-            "p_income"=>"10",
-            "p_occupation"=>"10",
-            "p_family_type"=>"10",
-            "p_manglik"=>"10",
-        ];
+        
         $matchArr = [];
         foreach ($users as $key => $user) {
+            $user_p_income =explode("-",$user->p_income) ;
+
             $matchValue = 0;
             if(in_array($user->occupation, Auth::user()->p_occupation)){
                 $matchValue += 10;
             }
             if(($auth_user_p_income[0] <= $user->income) && ($user->income <= $auth_user_p_income[1])){
+                $matchValue += 10;
+            }
+            if(($user_p_income[0] <= Auth::user()->income) && (Auth::user()->income <= $user_p_income[1])){
                 $matchValue += 10;
             }
             if(in_array($user->family_type,Auth::user()->p_family_type )){
